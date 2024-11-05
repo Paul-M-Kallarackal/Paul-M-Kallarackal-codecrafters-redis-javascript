@@ -2,6 +2,9 @@ const { connect } = require("http2");
 const net = require("net");
 
 const server = net.createServer((connection) => {
+    process.argv.forEach(function (val, index, array) {
+        console.log(index + ': ' + val);
+    });
   const Store = {}
   //Need to refactor the arguments
     connection.on("data", (data) => {
