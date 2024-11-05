@@ -1,9 +1,7 @@
+const { connect } = require("http2");
 const net = require("net");
 
 const server = net.createServer((connection) => {
-  // Handles multiple connections due to event loop in Javascript
-  // Already has an inbuilt event loop for concurrent connections
-  // handling ECHO as RESP Bulk String both input and output format, case insensitive -> $<length>\r\n<data>\r\n
   const Store = {}
   //Need to refactor the arguments
     connection.on("data", (data) => {
@@ -15,11 +13,23 @@ const server = net.createServer((connection) => {
             connection.write(Encoder(DataString[4]));
         }
         if(DataString[2].toUpperCase()==='SET'){
-            Store[DataString[4]] = DataString[6];
+            if(DataString[8]?.toUpperCase()==='PX'){
+                Store[DataString[4]] = [DataString[6],Date.now(),DataString[10]];
+            } else {
+                Store[DataString[4]] = [DataString[6],"",""];
+            }          
             connection.write(Encoder('OK'))
         }
         if(DataString[2].toUpperCase()==='GET'){
-            connection.write(Encoder(Store[DataString[4]]));
+            if(Store[DataString[4]][1]){
+                const timeDifference = (Date.now() - Store[DataString[4]][1])
+                const setTime = Store[DataString[4]][2];
+                const condition = timeDifference > setTime;
+                const data =  condition?  null: Store[DataString[4]][0];
+                data ? connection.write(Encoder(data)) : connection.write("$-1\r\n");
+            } else {
+                connection.write(Encoder(Store[DataString[4]][0]))
+            }
         }
     });
 });
