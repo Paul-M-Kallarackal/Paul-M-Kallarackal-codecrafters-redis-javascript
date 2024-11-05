@@ -20,7 +20,7 @@ const server = net.createServer((connection) => {
   if (fileExists) {
     const fileBuffer = fs.readFileSync(arguments[3]+'/'+arguments[5]).toString("hex");
     let stringData = fileBuffer.split('fb')[1]
-    print(stringData);
+    console.log(stringData);
     // hacky way to get the key and value
     stringData = stringData.substring(4, stringData.length - 4).split('ff')[0];
      const keyLength = parseInt(stringData.substring(2, 4),16);
