@@ -22,11 +22,12 @@ const server = net.createServer((connection) => {
     let stringData = fileBuffer.split('fb')[1]
     // hacky way to get the key and value
     stringData = stringData.substring(4, stringData.length - 4).split('ff')[0];
-     const stringLength = parseInt(stringData.substring(2, 4),16);
-     const key = hexToASCII(stringData.substring(4, (stringLength*2)+4));
+     const keyLength = parseInt(stringData.substring(2, 4),16);
+     const key = hexToASCII(stringData.substring(4, (keyLength*2)+4));
+     const valueLength = parseInt(stringData.substring((keyLength*2)+4, (keyLength*2)+6),16);
+     const value = hexToASCII(stringData.substring((keyLength*2)+6, (keyLength*2)+10+(valueLength*2)));
      // to be changed to the actual value
-     Store[key] = ['yada yada',Date.now(),null];
-     console.log(stringLength, key);
+     Store[key] = [value,null,null];
   }
 
   //Need to refactor the arguments
