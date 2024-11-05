@@ -24,14 +24,22 @@ const server = net.createServer((connection) => {
     // hacky way to get the key and value
     const numberofKeyValuePairs = parseInt(stringData.substring(0, 2),16);
     stringData = stringData.substring(4, stringData.length - 4).split('ff')[0];
-    let initialValue = 0 ;
+    let start = 2;
+    let end =4;
     for (let i = 0; i < numberofKeyValuePairs; i++) {
-        const keyLength = parseInt(stringData.substring(2+initialValue, 4+initialValue),16);
-        const key = hexToASCII(stringData.substring(4+initialValue, (keyLength*2)+4+initialValue));
-        const valueLength = parseInt(stringData.substring((keyLength*2)+4+initialValue, (keyLength*2)+4+2+initialValue),16);
-        const value = hexToASCII(stringData.substring((keyLength*2)+4+2+initialValue, (keyLength*2)+6+4+(valueLength*2)+initialValue));
+        const keyLength = parseInt(stringData.substring(start, end),16);
+        start = end;
+        end = end + (keyLength*2);
+        const key = hexToASCII(stringData.substring(start, end));
+        start = end;
+        end = end + 2;
+        const valueLength = parseInt(stringData.substring(start,end),16);
+        start = end;
+        end = end + (valueLength*2);
+        const value = hexToASCII(stringData.substring(start, end));
         Store[key] = [value,null,null];
-        initialValue += (keyLength*2)+6+4+(valueLength*2);
+        start = end;
+        end = end + 2;
     }
   }
 
