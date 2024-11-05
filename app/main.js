@@ -37,6 +37,7 @@ const server = net.createServer((connection) => {
         start = end;
         end = end + (valueLength*2);
         const value = hexToASCII(stringData.substring(start, end));
+        console.log(key, value);
         Store[key] = [value,null,null];
         start = end;
         end = end + 2;
