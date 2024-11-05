@@ -1,0 +1,10 @@
+const HEADER = '524544495330';
+const METADATA_START = 'FA';
+const HASH_TABLE_START = 'FB';
+const MILLISECONDS_EXPIRY = 'FC';
+const SECOND_EXPIRY = 'FD';
+const DATABASE_START = 'FE';
+const EOF = 'FF';
+
+
+

@@ -3,13 +3,32 @@ const fs = require("fs");
 const server = net.createServer((connection) => {
   const Store = new Map()
   const arguments = process.argv;
-  const fileExists = fs.existsSync(arguments[3]);
-  if (fileExists) {
-    const fileBuffer = fs.readFileSync(arguments[3]+'/'+arguments[5]);
-    const fileBufferString = fileBuffer.toString();
-    console.log(fileBufferString);
+
+
+
+  function hexToASCII(hex) {
+    var ascii = "";
+    for (var i = 0; i < hex.length; i += 2) {
+      var part = hex.substring(i, i + 2);
+      var ch = String.fromCharCode(parseInt(part, 16));
+      ascii = ascii + ch;
+    }
+    return ascii;
   }
-    
+
+  const fileExists = fs.existsSync(arguments[3]+'/'+arguments[5]);
+  if (fileExists) {
+    const fileBuffer = fs.readFileSync(arguments[3]+'/'+arguments[5]).toString("hex");
+    let stringData = fileBuffer.split('fb')[1]
+    // hacky way to get the key and value
+    stringData = stringData.substring(4, stringData.length - 4).split('ff')[0];
+     const stringLength = parseInt(stringData.substring(2, 4),16);
+     const key = hexToASCII(stringData.substring(4, (stringLength*2)+4));
+     // to be changed to the actual value
+     Store[key] = ['yada yada',Date.now(),null];
+     console.log(stringLength, key);
+  }
+
   //Need to refactor the arguments
     connection.on("data", (data) => {
         const commandList = Decoder(data.toString().toLowerCase());
