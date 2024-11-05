@@ -5,9 +5,9 @@ const server = net.createServer((connection) => {
   const arguments = process.argv;
   const fileExists = fs.existsSync(arguments[3]);
   if (fileExists) {
-    console.log(arguments[3]+arguments[5]);
     const fileBuffer = fs.readFileSync(arguments[3]+'/'+arguments[5]);
-    console.log('fileBuffer',fileBuffer);
+    const fileBufferString = fileBuffer.toString();
+    console.log(fileBufferString);
   }
     
   //Need to refactor the arguments
