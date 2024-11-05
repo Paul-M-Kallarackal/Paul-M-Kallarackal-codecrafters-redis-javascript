@@ -1,9 +1,15 @@
 const net = require("net");
-
+const fs = require("fs");
 const server = net.createServer((connection) => {
   const Store = new Map()
   const arguments = process.argv;
-
+  const fileExists = fs.existsSync(arguments[3]);
+  if (fileExists) {
+    console.log(arguments[3]+arguments[5]);
+    const fileBuffer = fs.readFileSync(arguments[3]+arguments[5]);
+    console.log('fileBuffer',fileBuffer);
+  }
+    
   //Need to refactor the arguments
     connection.on("data", (data) => {
         const commandList = Decoder(data.toString().toLowerCase());
@@ -33,6 +39,11 @@ const server = net.createServer((connection) => {
                 };
                 if(commandList[6]==='dbfilename'){
                     connection.write(Encoder(['dbfilename',process.argv[5]]));;  
+                }
+            case 'keys':
+                if(commandList[4]==='*'){
+                    const keys = Object.keys(Store);
+                    connection.write(Encoder(keys));
                 }
         }
     });
