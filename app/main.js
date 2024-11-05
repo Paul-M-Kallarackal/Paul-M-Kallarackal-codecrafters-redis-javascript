@@ -22,9 +22,9 @@ const server = net.createServer((connection) => {
     let stringData = fileBuffer.split('fb')[1]
     // hacky way to get the key and value
     const numberofKeyValuePairs = parseInt(stringData.substring(0, 2),16);
-    stringData = stringData.substring(4, stringData.length - 4).split('ff')[0];
-    let start = 2;
-    let end =4;
+    stringData = stringData.substring(2, stringData.length).split('ff')[0];
+    let start = 4;
+    let end =6;
     for (let i = 0; i < numberofKeyValuePairs; i++) {
         const keyLength = parseInt(stringData.substring(start, end),16);
         start = end;
@@ -39,7 +39,7 @@ const server = net.createServer((connection) => {
         console.log(key, value);
         Store[key] = [value,null,null];
         start = end;
-        end = end + 2;
+        end = end + 4;
     }
   }
 
