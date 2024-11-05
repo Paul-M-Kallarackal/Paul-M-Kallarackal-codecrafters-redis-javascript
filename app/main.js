@@ -20,7 +20,6 @@ const server = net.createServer((connection) => {
   if (fileExists) {
     const fileBuffer = fs.readFileSync(arguments[3]+'/'+arguments[5]).toString("hex");
     let stringData = fileBuffer.split('fb')[1]
-    console.log(stringData);
     // hacky way to get the key and value
     const numberofKeyValuePairs = parseInt(stringData.substring(0, 2),16);
     stringData = stringData.substring(4, stringData.length - 4).split('ff')[0];
@@ -77,7 +76,6 @@ const server = net.createServer((connection) => {
             case 'keys':
                 if(commandList[4]==='*'){
                     const keys = Object.keys(Store);
-                    console.log(keys);
                     connection.write(Encoder(keys));
                 }
         }
