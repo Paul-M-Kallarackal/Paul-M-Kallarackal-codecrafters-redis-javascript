@@ -68,6 +68,7 @@ const server = net.createServer((connection) => {
             case 'keys':
                 if(commandList[4]==='*'){
                     const keys = Object.keys(Store);
+                    console.log(keys);
                     connection.write(Encoder(keys));
                 }
         }
