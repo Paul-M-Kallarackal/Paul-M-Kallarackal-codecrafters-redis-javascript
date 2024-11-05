@@ -22,13 +22,17 @@ const server = net.createServer((connection) => {
     let stringData = fileBuffer.split('fb')[1]
     console.log(stringData);
     // hacky way to get the key and value
+    const numberofKeyValuePairs = parseInt(stringData.substring(0, 2),16);
     stringData = stringData.substring(4, stringData.length - 4).split('ff')[0];
-     const keyLength = parseInt(stringData.substring(2, 4),16);
-     const key = hexToASCII(stringData.substring(4, (keyLength*2)+4));
-     const valueLength = parseInt(stringData.substring((keyLength*2)+4, (keyLength*2)+6),16);
-     const value = hexToASCII(stringData.substring((keyLength*2)+6, (keyLength*2)+10+(valueLength*2)));
-     // to be changed to the actual value
-     Store[key] = [value,null,null];
+    let initialValue = 0 ;
+    for (let i = 0; i < numberofKeyValuePairs; i++) {
+        const keyLength = parseInt(stringData.substring(2+initialValue, 4+initialValue),16);
+        const key = hexToASCII(stringData.substring(4+initialValue, (keyLength*2)+4+initialValue));
+        const valueLength = parseInt(stringData.substring((keyLength*2)+4+initialValue, (keyLength*2)+4+2+initialValue),16);
+        const value = hexToASCII(stringData.substring((keyLength*2)+4+2+initialValue, (keyLength*2)+6+4+(valueLength*2)+initialValue));
+        Store[key] = [value,null,null];
+        initialValue += (keyLength*2)+6+4+(valueLength*2);
+    }
   }
 
   //Need to refactor the arguments
